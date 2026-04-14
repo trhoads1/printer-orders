@@ -9,10 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="BeToner">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#060608">
-<link rel="manifest" href="/printer-orders/manifest.json">
-<link rel="canonical" href="https://trhoads1.github.io/printer-orders/">
-<link rel="icon" href="/printer-orders/icon-192.png">
-<link rel="apple-touch-icon" href="/printer-orders/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -146,6 +145,53 @@ iframe {
   100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* ── iOS LAUNCH BUTTON ── */
+.ios-launch-btn {
+  position: relative;
+  z-index: 2;
+  display: none;
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #cd040b, #f59e0b);
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  margin-top: 28px;
+  opacity: 0;
+  animation: textFadeIn 1.4s ease 1.2s forwards;
+  -webkit-tap-highlight-color: transparent;
+}
+.ios-launch-btn:active {
+  filter: brightness(0.85);
+}
+.ios-mode .ios-launch-btn {
+  display: inline-block;
+}
+.ios-mode .launch-hint {
+  display: none;
+}
+.ios-mode #launch {
+  cursor: default;
+}
+
+/* ── iOS NOTE ── */
+.ios-note {
+  position: relative;
+  z-index: 2;
+  font-size: 11px;
+  color: #374151;
+  margin-top: 16px;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  animation: textFadeIn 1.6s ease 1.6s forwards;
+  display: none;
+}
+.ios-mode .ios-note {
+  display: block;
+}
+
 /* Safe area support */
 @supports (padding: env(safe-area-inset-top)) {
   body {
@@ -159,7 +205,7 @@ iframe {
 </head>
 <body>
 
-<div id="launch" onclick="launchApp()">
+<div id="launch">
   <canvas id="particles"></canvas>
 
   <!-- Pulse rings behind icon -->
@@ -198,52 +244,37 @@ iframe {
           <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      <!-- Background rounded square -->
       <rect x="2" y="2" width="136" height="136" rx="30" fill="url(#bgC)"/>
-      <!-- Subtle corner glow -->
       <rect x="2" y="2" width="136" height="136" rx="30" fill="none" stroke="#cd040b" stroke-width="1" opacity="0.3"/>
-      <!-- Scan beam -->
       <rect x="20" y="66" width="100" height="5" rx="2.5" fill="url(#amberBeam)"/>
-      <!-- Paper coming out top -->
       <rect x="45" y="18" width="50" height="38" rx="3" fill="url(#paperGrad)"/>
-      <!-- Paper fold corner -->
       <polygon points="83,18 95,30 83,30" fill="#9ca3af" opacity="0.5"/>
-      <!-- Lines on paper -->
       <line x1="53" y1="29" x2="79" y2="29" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round"/>
       <line x1="53" y1="36" x2="75" y2="36" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round"/>
       <line x1="53" y1="43" x2="82" y2="43" stroke="#cd040b" stroke-width="2" stroke-linecap="round"/>
       <line x1="53" y1="50" x2="70" y2="50" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-      <!-- Printer body -->
       <rect x="18" y="52" width="104" height="52" rx="10" fill="url(#printerBodyGrad)"/>
-      <!-- Red top stripe -->
       <rect x="18" y="52" width="104" height="10" rx="10" fill="url(#redBarC)"/>
       <rect x="18" y="57" width="104" height="5" fill="url(#redBarC)"/>
-      <!-- Paper slot shadow -->
       <rect x="36" y="62" width="68" height="7" rx="3.5" fill="#0a0a0a"/>
       <rect x="38" y="63" width="64" height="5" rx="2.5" fill="#111827"/>
-      <!-- Control button -->
       <circle cx="96" cy="85" r="8" fill="#0f172a"/>
       <circle cx="96" cy="85" r="5" fill="#cd040b"/>
       <circle cx="94" cy="83" r="2" fill="#f87171" opacity="0.7"/>
-      <!-- Status LEDs -->
       <circle cx="108" cy="80" r="3.5" fill="#f59e0b"/>
       <circle cx="108" cy="80" r="1.5" fill="#fde68a"/>
       <circle cx="108" cy="91" r="3.5" fill="#10b981"/>
       <circle cx="108" cy="91" r="1.5" fill="#6ee7b7"/>
-      <!-- Vent slits -->
       <rect x="26" y="76" width="2" height="14" rx="1" fill="#111827"/>
       <rect x="31" y="76" width="2" height="14" rx="1" fill="#111827"/>
       <rect x="36" y="76" width="2" height="14" rx="1" fill="#111827"/>
-      <!-- Output tray -->
       <rect x="26" y="102" width="88" height="5" rx="2.5" fill="#111827"/>
       <rect x="26" y="104" width="88" height="3" rx="1.5" fill="#0a0a0a"/>
-      <!-- Toner particle dots -->
       <circle cx="48" cy="118" r="2.5" fill="#f59e0b" opacity="0.8"/>
       <circle cx="60" cy="121" r="1.8" fill="#f59e0b" opacity="0.55"/>
       <circle cx="72" cy="117" r="2.5" fill="#f59e0b" opacity="0.8"/>
       <circle cx="84" cy="120" r="1.8" fill="#f59e0b" opacity="0.55"/>
       <circle cx="94" cy="116" r="2" fill="#cd040b" opacity="0.7"/>
-      <!-- Shine highlight on body -->
       <rect x="22" y="55" width="50" height="3" rx="1.5" fill="white" opacity="0.06"/>
     </svg>
   </div>
@@ -251,6 +282,12 @@ iframe {
   <div class="launch-title">BeToner Orders</div>
   <div class="accent-line"></div>
   <div class="launch-subtitle">Toner Order Tracker</div>
+
+  <!-- iOS: styled link (never navigates away from this page URL) -->
+  <a id="iosBtn" class="ios-launch-btn" href="#">Launch Dashboard</a>
+  <div class="ios-note">Opens in a browser view. Tap Done to return.</div>
+
+  <!-- Desktop/Android: tap anywhere hint -->
   <div class="launch-hint">Tap anywhere to launch</div>
 </div>
 
@@ -270,101 +307,74 @@ const GAS_URL = 'https://script.google.com/a/macros/bemobile.com/s/AKfycbwAV34TH
   resize();
   window.addEventListener('resize', resize);
 
-  // Color palettes — ember tones
   const COLORS = [
-    { r: 205, g: 4,   b: 11  },  // BeMobile red
-    { r: 245, g: 158, b: 11  },  // amber
-    { r: 251, g: 191, b: 36  },  // yellow-amber
-    { r: 239, g: 68,  b: 68  },  // lighter red
-    { r: 253, g: 224, b: 71  },  // pale yellow
+    { r: 205, g: 4,   b: 11  },
+    { r: 245, g: 158, b: 11  },
+    { r: 251, g: 191, b: 36  },
+    { r: 239, g: 68,  b: 68  },
+    { r: 253, g: 224, b: 71  },
   ];
 
   function rnd(min, max) { return Math.random() * (max - min) + min; }
 
   function spawnParticle() {
     const col = COLORS[Math.floor(Math.random() * COLORS.length)];
-    // Start from bottom, random x with slight center bias
     const centerBias = W * 0.5 + rnd(-W * 0.35, W * 0.35);
     return {
-      x: centerBias,
-      y: H + rnd(0, 40),
-      // Drift: alternating left/right wave paths
+      x: centerBias, y: H + rnd(0, 40),
       baseX: centerBias,
-      vx: rnd(-0.6, 0.6),
-      vy: rnd(-1.8, -3.2),          // upward speed
-      waveAmp: rnd(18, 55),          // how wide the S-curve swings
-      waveFreq: rnd(0.012, 0.028),   // wave frequency
+      vx: rnd(-0.6, 0.6), vy: rnd(-1.8, -3.2),
+      waveAmp: rnd(18, 55), waveFreq: rnd(0.012, 0.028),
       waveOffset: rnd(0, Math.PI * 2),
-      size: rnd(1.2, 3.8),
-      life: 1.0,
-      decay: rnd(0.004, 0.012),     // slower decay = longer life
+      size: rnd(1.2, 3.8), life: 1.0, decay: rnd(0.004, 0.012),
       r: col.r, g: col.g, b: col.b,
-      twinkle: rnd(0, Math.PI * 2),
-      twinkleSpeed: rnd(0.04, 0.12),
-      traveled: 0,                   // track vertical travel for wave
+      twinkle: rnd(0, Math.PI * 2), twinkleSpeed: rnd(0.04, 0.12),
+      traveled: 0,
     };
   }
 
-  // Seed initial particles staggered so it doesn't start empty
   for (let i = 0; i < 80; i++) {
     const p = spawnParticle();
-    p.y = rnd(0, H);                 // distribute vertically on init
+    p.y = rnd(0, H);
     p.life = rnd(0.2, 0.95);
     particles.push(p);
   }
 
   function step() {
     ctx.clearRect(0, 0, W, H);
-
-    // Spawn new particles
-    const spawnRate = 3;
-    for (let i = 0; i < spawnRate; i++) {
+    for (let i = 0; i < 3; i++) {
       if (particles.length < 180) particles.push(spawnParticle());
     }
-
     particles.forEach(function(p) {
       p.traveled += Math.abs(p.vy);
-      // S-curve horizontal drift — sine wave offsetting from base x
       p.x = p.baseX + Math.sin(p.traveled * p.waveFreq + p.waveOffset) * p.waveAmp;
-      p.baseX += p.vx * 0.3;        // very slow overall drift
+      p.baseX += p.vx * 0.3;
       p.y += p.vy;
       p.life -= p.decay;
       p.twinkle += p.twinkleSpeed;
-
-      // Twinkle: oscillate brightness
-      const twinkleFactor = 0.75 + Math.sin(p.twinkle) * 0.25;
-      const alpha = Math.max(0, p.life) * twinkleFactor;
-
-      // Fade edges: near top alpha falls off
-      const topFade = Math.min(1, p.y / (H * 0.15));
-      const finalAlpha = alpha * topFade;
-
+      var twinkleFactor = 0.75 + Math.sin(p.twinkle) * 0.25;
+      var alpha = Math.max(0, p.life) * twinkleFactor;
+      var topFade = Math.min(1, p.y / (H * 0.15));
+      var finalAlpha = alpha * topFade;
       if (finalAlpha <= 0) return;
-
-      // Draw flake: core + soft halo
-      // Halo
-      const haloR = p.size * 3.5;
-      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
-      grad.addColorStop(0,   `rgba(${p.r},${p.g},${p.b},${finalAlpha * 0.5})`);
-      grad.addColorStop(0.4, `rgba(${p.r},${p.g},${p.b},${finalAlpha * 0.2})`);
-      grad.addColorStop(1,   `rgba(${p.r},${p.g},${p.b},0)`);
+      var haloR = p.size * 3.5;
+      var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
+      grad.addColorStop(0,   'rgba('+p.r+','+p.g+','+p.b+','+finalAlpha * 0.5+')');
+      grad.addColorStop(0.4, 'rgba('+p.r+','+p.g+','+p.b+','+finalAlpha * 0.2+')');
+      grad.addColorStop(1,   'rgba('+p.r+','+p.g+','+p.b+',0)');
       ctx.beginPath();
       ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2);
       ctx.fillStyle = grad;
       ctx.fill();
-
-      // Core bright dot
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${finalAlpha * 0.9})`;
+      ctx.fillStyle = 'rgba(255,255,255,'+finalAlpha * 0.9+')';
       ctx.fill();
-
-      // Elongated upward streak for fast particles
       if (Math.abs(p.vy) > 2.2) {
-        const streakLen = Math.abs(p.vy) * 3;
-        const g2 = ctx.createLinearGradient(p.x, p.y, p.x, p.y + streakLen);
-        g2.addColorStop(0, `rgba(${p.r},${p.g},${p.b},${finalAlpha * 0.6})`);
-        g2.addColorStop(1, `rgba(${p.r},${p.g},${p.b},0)`);
+        var streakLen = Math.abs(p.vy) * 3;
+        var g2 = ctx.createLinearGradient(p.x, p.y, p.x, p.y + streakLen);
+        g2.addColorStop(0, 'rgba('+p.r+','+p.g+','+p.b+','+finalAlpha * 0.6+')');
+        g2.addColorStop(1, 'rgba('+p.r+','+p.g+','+p.b+',0)');
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(p.x, p.y + streakLen);
@@ -373,60 +383,57 @@ const GAS_URL = 'https://script.google.com/a/macros/bemobile.com/s/AKfycbwAV34TH
         ctx.stroke();
       }
     });
-
-    // Remove dead particles
     particles = particles.filter(function(p) { return p.life > 0 && p.y > -20; });
-
     animId = requestAnimationFrame(step);
   }
-
   step();
 
-  // Expose stop function
   window._stopParticles = function() {
     cancelAnimationFrame(animId);
-    // Fade canvas out
     canvas.style.transition = 'opacity 0.8s ease';
     canvas.style.opacity = '0';
   };
 })();
 
-/* ── LAUNCH LOGIC ── */
-var launched = false;
-function launchApp() {
-  if (launched) return;
-  launched = true;
-
-  window._stopParticles && window._stopParticles();
-
-  var launch = document.getElementById('launch');
-  launch.classList.add('fading');
-
-  setTimeout(function() {
-    launch.style.display = 'none';
-
-    if (isIOS()) {
-      // iOS: open in Safari (can't iframe Google Apps Script on iOS)
-      window.location.href = GAS_URL;
-    } else {
-      var iframe = document.createElement('iframe');
-      iframe.src = GAS_URL;
-      iframe.allow = 'clipboard-write';
-      iframe.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox allow-modals';
-      iframe.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;background:#060608;z-index:1;';
-      document.body.appendChild(iframe);
-    }
-  }, 850);
-}
-
+/* ── PLATFORM DETECTION ── */
 function isIOS() {
   return /iPhone|iPod|iPad/.test(navigator.userAgent)
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
+/* ── SETUP ── */
+(function() {
+  var launch = document.getElementById('launch');
+
+  if (isIOS()) {
+    // iOS mode: show the styled link button, disable tap-anywhere
+    document.body.classList.add('ios-mode');
+    document.getElementById('iosBtn').href = GAS_URL;
+  } else {
+    // Desktop / Android: tap anywhere to load iframe
+    launch.addEventListener('click', function() {
+      if (launch.dataset.launched) return;
+      launch.dataset.launched = '1';
+
+      window._stopParticles && window._stopParticles();
+      launch.classList.add('fading');
+
+      setTimeout(function() {
+        launch.style.display = 'none';
+        var iframe = document.createElement('iframe');
+        iframe.src = GAS_URL;
+        iframe.allow = 'clipboard-write';
+        iframe.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox allow-modals';
+        iframe.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;background:#060608;z-index:1;';
+        document.body.appendChild(iframe);
+      }, 850);
+    });
+  }
+})();
+
 /* ── SERVICE WORKER ── */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/printer-orders/sw.js', { scope: '/printer-orders/' }).catch(function() {});
+  navigator.serviceWorker.register('sw.js').catch(function() {});
 }
 </script>
 </body>
