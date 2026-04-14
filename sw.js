@@ -1,21 +1,9 @@
-// BeToner Orders — Service Worker
-// Caches the launch shell for offline / fast load.
+// BeToner Orders — Service Worker v2
+// Network-first strategy so stale cached shells never block the app.
 
-const CACHE = 'betoner-v1';
-const SHELL = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-];
+const CACHE = 'betoner-v2';
 
 self.addEventListener('install', function(e) {
-  e.waitUntil(
-    caches.open(CACHE).then(function(cache) {
-      return cache.addAll(SHELL);
-    })
-  );
   self.skipWaiting();
 });
 
@@ -32,16 +20,18 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
-  // Only intercept same-origin requests (not the GAS dashboard)
+  // Only handle same-origin requests — never intercept the GAS dashboard URL
   if (!e.request.url.startsWith(self.location.origin)) return;
+  // Network-first: try network, fall back to cache
   e.respondWith(
-    caches.match(e.request).then(function(cached) {
-      return cached || fetch(e.request).then(function(res) {
-        return caches.open(CACHE).then(function(cache) {
-          cache.put(e.request, res.clone());
-          return res;
-        });
+    fetch(e.request).then(function(res) {
+      var clone = res.clone();
+      caches.open(CACHE).then(function(cache) {
+        cache.put(e.request, clone);
       });
+      return res;
+    }).catch(function() {
+      return caches.match(e.request);
     })
   );
 });
