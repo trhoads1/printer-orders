@@ -10,8 +10,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#060608">
 <link rel="manifest" href="/printer-orders/manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="canonical" href="https://trhoads1.github.io/printer-orders/">
+<link rel="icon" href="/printer-orders/icon-192.png">
+<link rel="apple-touch-icon" href="/printer-orders/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -425,7 +426,7 @@ function isIOS() {
 
 /* ── SERVICE WORKER ── */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(function() {});
+  navigator.serviceWorker.register('/printer-orders/sw.js', { scope: '/printer-orders/' }).catch(function() {});
 }
 </script>
 </body>
